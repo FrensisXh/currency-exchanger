@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rootLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:background="@color/blue"
+            android:gravity="center"
+            android:text="Currency converter"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Balance Title -->
+        <TextView
+            android:id="@+id/tvBalances"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="My balances"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+        <LinearLayout
+            android:id="@+id/layoutBalances"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvBalances">
+
+            <TextView
+                android:id="@+id/tvBalanceEur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:text="1000.00 EUR"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tvBalanceUsd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:text="0.00 USD"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tvBalanceBgn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00 BGN"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvExchangeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:paddingHorizontal="16dp"
+            android:text="Currency Exchange"
+            android:textAllCaps="true"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutBalances" />
+
+        <!-- SELL row -->
+        <LinearLayout
+            android:id="@+id/layoutSell"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvExchangeLabel">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_arrow_up" />
+
+            <TextView
+                android:id="@+id/tvSell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="Sell"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="100.00"
+                android:inputType="numberDecimal"
+                android:textAlignment="textEnd" />
+
+            <Spinner
+                android:id="@+id/spinnerFrom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- RECEIVE row -->
+        <LinearLayout
+            android:id="@+id/layoutReceive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutSell">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_arrow_down" />
+
+            <TextView
+                android:id="@+id/tvReceive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="Receive"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvConvertedAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="+110.30"
+                android:textAlignment="textEnd"
+                android:textColor="@android:color/holo_green_dark"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/spinnerTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnConvert"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/blue"
+            android:text="Submit"
+            android:textSize="16sp"
+            android:textAllCaps="true"
+            android:padding="12dp"
+            android:textColor="@android:color/white"
+            app:cornerRadius="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
