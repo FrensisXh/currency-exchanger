@@ -10,10 +10,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import androidx.lifecycle.asLiveData
+import com.example.currencyexchanger.CommissionAmountPolicy
+import com.example.currencyexchanger.StandardCommissionPolicy
 import kotlinx.coroutines.flow.map
 
 
 class CurrencyViewModel : ViewModel() {
+    private val commissionPolicy: CommissionAmountPolicy = StandardCommissionPolicy()
+
     //to fetch data from the AP
     private val repository = CurrencyRepository()
 
@@ -66,7 +70,7 @@ class CurrencyViewModel : ViewModel() {
     ): Pair<String, Boolean> {
         //extract the rate and handle nulls
         val rate = _rates.value?.rates?.get(to) ?: return Pair("Rate is N/A", false)
-        val commissionFee = if (transactionCount >= 5) amount * 0.007 else 0.0
+        val commissionFee = commissionPolicy.calculateCommissionAmount(transactionCount, amount)
         val totalDeducted = amount + commissionFee
 
         if ((balances[from] ?: 0.0) < totalDeducted) {
