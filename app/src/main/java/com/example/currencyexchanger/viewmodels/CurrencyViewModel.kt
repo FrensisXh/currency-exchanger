@@ -1,5 +1,6 @@
 package com.example.currencyexchanger.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyexchanger.data.model.CurrencyResponse
@@ -12,7 +13,7 @@ import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.map
 
 
-class CurrencyViewModel: ViewModel() {
+class CurrencyViewModel : ViewModel() {
     //to fetch data from the AP
     private val repository = CurrencyRepository()
 
@@ -46,13 +47,16 @@ class CurrencyViewModel: ViewModel() {
             while (true) {
                 try {
                     val response = repository.getExchangeRates()
+                    Log.d("CurrencyDebug", "API success — rates: ${response.rates.keys}")
                     _rates.value = response
                 } catch (e: Exception) {
+                    Log.e("CurrencyDebug", "API error: ${e.localizedMessage}")
                     e.printStackTrace()
                 }
                 delay(5000L)
             }
         }
+
     }
 
     fun calculateConversion(
@@ -71,7 +75,7 @@ class CurrencyViewModel: ViewModel() {
 
         val convertedAmount = amount * rate
 
-        // Update balances
+        // update the balances
         balances[from] = (balances[from] ?: 0.0) - totalDeducted
         balances[to] = (balances[to] ?: 0.0) + convertedAmount
 
@@ -86,4 +90,13 @@ class CurrencyViewModel: ViewModel() {
 
         return Pair(msg, true)
     }
+
+    fun getBalance(currency: String): Double {
+        return balances[currency] ?: 0.0
+    }
+
+    fun getRate(to: String): Double? {
+        return _rates.value?.rates?.get(to)
+    }
+
 }
