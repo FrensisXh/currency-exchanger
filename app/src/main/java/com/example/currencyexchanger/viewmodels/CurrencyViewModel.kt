@@ -1,7 +1,8 @@
 package com.example.currencyexchanger.viewmodels
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyexchanger.data.model.CurrencyResponse
 import com.example.currencyexchanger.data.repository.CurrencyRepository
@@ -12,11 +13,16 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.asLiveData
 import com.example.currencyexchanger.CommissionAmountPolicy
 import com.example.currencyexchanger.StandardCommissionPolicy
+import com.example.currencyexchanger.utils.BalanceManager
 import kotlinx.coroutines.flow.map
 
 
-class CurrencyViewModel : ViewModel() {
+class CurrencyViewModel(application: Application) : AndroidViewModel(application) {
     private val commissionPolicy: CommissionAmountPolicy = StandardCommissionPolicy()
+
+    private val balanceManager = BalanceManager(application.applicationContext)
+    private var balances = balanceManager.loadBalances()
+
 
     //to fetch data from the AP
     private val repository = CurrencyRepository()
@@ -32,14 +38,7 @@ class CurrencyViewModel : ViewModel() {
         .asLiveData()
 
 
-    //track balances
-    private var balances = mutableMapOf(
-        "EUR" to 1000.0,
-        "USD" to 0.0,
-        "BGN" to 0.0
-    )
-
-    private var transactionCount = 0
+    private var transactionCount = balanceManager.loadTransactionCount()
 
     //start fetching exchange rates every 5 seconds
     init {
@@ -84,6 +83,8 @@ class CurrencyViewModel : ViewModel() {
         balances[to] = (balances[to] ?: 0.0) + convertedAmount
 
         transactionCount++
+        balanceManager.saveTransactionCount(transactionCount)
+
 
         val msg = if (commissionFee > 0)
             "You have converted $amount $from to %.2f $to. Commission Fee - %.2f $from.".format(
@@ -91,6 +92,8 @@ class CurrencyViewModel : ViewModel() {
             )
         else
             "You have converted $amount $from to %.2f $to.".format(convertedAmount)
+
+        balanceManager.saveBalances(balances)
 
         return Pair(msg, true)
     }
