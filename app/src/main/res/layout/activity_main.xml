@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,8 +16,10 @@
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:background="@color/blue"
+            android:fontFamily="@font/poppins_medium"
             android:gravity="center"
-            android:text="Currency converter"
+            android:textAllCaps="true"
+            android:text="@string/currency_exchanger"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -29,9 +31,11 @@
             android:id="@+id/tvBalances"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_medium"
             android:padding="16dp"
-            android:text="My balances"
+            android:text="@string/my_balances"
             android:textAllCaps="true"
+            android:textColor="@color/text_blue"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
@@ -51,23 +55,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:text="1000.00 EUR"
-                android:textSize="20sp" />
+                android:fontFamily="@font/poppins"
+                android:textSize="20sp"
+                tools:text="1000.00 EUR" />
 
             <TextView
                 android:id="@+id/tvBalanceUsd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:text="0.00 USD"
-                android:textSize="20sp" />
+                android:fontFamily="@font/poppins"
+                android:textSize="20sp"
+                tools:text="0.00 USD" />
 
             <TextView
                 android:id="@+id/tvBalanceBgn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0.00 BGN"
-                android:textSize="20sp" />
+                android:fontFamily="@font/poppins"
+                android:textSize="20sp"
+                tools:text="0.00 BGN" />
         </LinearLayout>
 
         <TextView
@@ -75,9 +82,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:fontFamily="@font/poppins_medium"
             android:paddingHorizontal="16dp"
-            android:text="Currency Exchange"
+            android:text="@string/currency_exchange"
             android:textAllCaps="true"
+            android:textColor="@color/text_blue"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutBalances" />
@@ -99,6 +108,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="8dp"
+                android:contentDescription="@string/sell_icon"
                 android:src="@drawable/ic_arrow_up" />
 
             <TextView
@@ -106,7 +116,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:text="Sell"
+                android:fontFamily="@font/poppins"
+                android:text="@string/sell"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -115,7 +126,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="100.00"
+                android:fontFamily="@font/poppins"
+                android:hint="@string/_100_00"
                 android:inputType="numberDecimal"
                 android:textAlignment="textEnd" />
 
@@ -143,6 +155,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="8dp"
+                android:contentDescription="@string/receive_icon"
                 android:src="@drawable/ic_arrow_down" />
 
             <TextView
@@ -150,7 +163,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                android:text="Receive"
+                android:fontFamily="@font/poppins"
+                android:text="@string/receive"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -159,10 +173,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                tools:text="+110.30"
+                android:fontFamily="@font/poppins"
                 android:textAlignment="textEnd"
                 android:textColor="@android:color/holo_green_dark"
-                android:textSize="16sp" />
+                android:textSize="17sp"
+                tools:text="+110.30" />
 
             <Spinner
                 android:id="@+id/spinnerTo"
@@ -179,11 +194,12 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="24dp"
             android:backgroundTint="@color/blue"
-            android:text="Convert"
-            android:textSize="16sp"
-            android:textAllCaps="true"
+            android:fontFamily="@font/poppins"
             android:padding="12dp"
+            android:text="@string/convert"
+            android:textAllCaps="true"
             android:textColor="@android:color/white"
+            android:textSize="16sp"
             app:cornerRadius="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

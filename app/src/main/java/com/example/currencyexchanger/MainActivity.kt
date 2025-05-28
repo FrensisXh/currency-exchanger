@@ -71,6 +71,11 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if (fromCurrency == toCurrency) {
+                Toast.makeText(this, "Please, select two different currencies", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val (resultMessage, success) = viewModel.calculateConversion(
                 amount,
                 fromCurrency,
@@ -119,11 +124,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun updateBalanceViews() {
-        binding.tvBalanceEur.text = "%.2f EUR".format(viewModel.getBalance("EUR"))
-        binding.tvBalanceUsd.text = "%.2f USD".format(viewModel.getBalance("USD"))
-        binding.tvBalanceBgn.text = "%.2f BGN".format(viewModel.getBalance("BGN"))
+        binding.tvBalanceEur.text = getString(R.string.eur_format, viewModel.getBalance("EUR"))
+        binding.tvBalanceUsd.text = getString(R.string.usd_format, viewModel.getBalance("USD"))
+        binding.tvBalanceBgn.text = getString(R.string.bgn_format, viewModel.getBalance("BGN"))
     }
 
     private fun showResultDialog(message: String) {

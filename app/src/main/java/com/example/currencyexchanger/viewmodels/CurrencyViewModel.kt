@@ -67,6 +67,11 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
         from: String,
         to: String
     ): Pair<String, Boolean> {
+
+        if (from == to) {
+            return Pair("Operation not possible; cannot convert between the same currency", false)
+        }
+
         //extract the rate and handle nulls
         val rate = _rates.value?.rates?.get(to) ?: return Pair("Rate is N/A", false)
         val commissionFee = commissionPolicy.calculateCommissionAmount(transactionCount, amount)

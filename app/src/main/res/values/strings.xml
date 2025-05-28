@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">CurrencyExchanger</string>
+    <string name="currency_exchanger">Currency Exchanger</string>
+    <string name="my_balances">My balances</string>
+    <string name="currency_exchange">Currency Exchange</string>
+    <string name="sell_icon">Sell icon</string>
+    <string name="sell">Sell</string>
+    <string name="_100_00">100.00</string>
+    <string name="receive_icon">Receive icon</string>
+    <string name="receive">Receive</string>
+    <string name="convert">Convert</string>
+    <string name="eur_format">%.2f EUR</string>
+    <string name="usd_format">%.2f USD</string>
+    <string name="bgn_format">%.2f BGN</string>
+
 </resources>
