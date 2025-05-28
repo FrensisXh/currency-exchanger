@@ -14,6 +14,7 @@ import androidx.lifecycle.asLiveData
 import com.example.currencyexchanger.CommissionAmountPolicy
 import com.example.currencyexchanger.StandardCommissionPolicy
 import com.example.currencyexchanger.utils.BalanceManager
+import com.example.currencyexchanger.utils.ConversionResult
 import kotlinx.coroutines.flow.map
 
 
@@ -62,55 +63,46 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
 
     }
 
-    fun calculateConversion(
-        amount: Double,
-        from: String,
-        to: String
-    ): Pair<String, Boolean> {
-
+    fun calculateConversion(amount: Double, from: String, to: String): ConversionResult {
         if (from == to) {
-            return Pair("Operation not possible; cannot convert between the same currency", false)
+            return ConversionResult.Error("Please to proceed select two different currencies")
         }
 
-        //extract the rate and handle nulls
-        val rate = _rates.value?.rates?.get(to) ?: return Pair("Rate is N/A", false)
+        // get the exchange rate for the target currency
+        val rate = _rates.value?.rates?.get(to) ?: return ConversionResult.Error("Rate is N/A")
+
+        // calculate commission fee based on commission policy
         val commissionFee = commissionPolicy.calculateCommissionAmount(transactionCount, amount)
         val totalDeducted = amount + commissionFee
 
+        // to ensure the user has enough balance to make the conversion
         if ((balances[from] ?: 0.0) < totalDeducted) {
-            return Pair("Insufficient balance", false)
+            return ConversionResult.Error("Insufficient balance")
         }
 
         val convertedAmount = amount * rate
-
-        // update the balances
         balances[from] = (balances[from] ?: 0.0) - totalDeducted
         balances[to] = (balances[to] ?: 0.0) + convertedAmount
 
+        // save the updated transaction count and balances
         transactionCount++
         balanceManager.saveTransactionCount(transactionCount)
-
+        balanceManager.saveBalances(balances)
 
         val msg = if (commissionFee > 0)
             "You have converted $amount $from to %.2f $to. Commission Fee - %.2f $from.".format(
-                convertedAmount, commissionFee
+                convertedAmount,
+                commissionFee
             )
         else
             "You have converted $amount $from to %.2f $to.".format(convertedAmount)
 
-        balanceManager.saveBalances(balances)
-
-        return Pair(msg, true)
+        return ConversionResult.Success(msg)
     }
 
     fun getAllBalances(): Map<String, Double> = balances
 
-//    fun getBalance(currency: String): Double {
-//        return balances[currency] ?: 0.0
-//    }
-
     fun getRate(to: String): Double? {
         return _rates.value?.rates?.get(to)
     }
-
 }

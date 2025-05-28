@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.currencyexchanger.data.model.BalanceItem
 import com.example.currencyexchanger.databinding.ActivityMainBinding
 import com.example.currencyexchanger.ui.BalanceAdapter
+import com.example.currencyexchanger.utils.ConversionResult
 import com.example.currencyexchanger.viewmodels.CurrencyViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -31,11 +32,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Set the status bar color
+        // set the status bar color with light icons in the status bar
         WindowCompat.setDecorFitsSystemWindows(window, true)
         window.statusBarColor = ContextCompat.getColor(this, R.color.blue)
-
-        // Set light icons in the status bar
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
 
         setupExchangeUI()
@@ -43,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupExchangeUI() {
-        // Observe the list of available currency codes and populate spinners
+        // observe the list of available currency codes and populate spinners
         viewModel.currencyCodesLiveData.observe(this) { codes ->
             if (codes.isEmpty()) return@observe
 
@@ -58,10 +57,11 @@ class MainActivity : AppCompatActivity() {
             binding.spinnerFrom.adapter = adapter
             binding.spinnerTo.adapter = adapter
 
-            // Set default selections
+            // set default selections
             binding.spinnerFrom.setSelection(codes.indexOf("EUR"))
             binding.spinnerTo.setSelection(codes.indexOf("USD"))
-            // Trigger preview once spinners are populated
+
+            // trigger preview once spinners are populated
             updateConvertedAmountPreview()
         }
 
@@ -70,34 +70,33 @@ class MainActivity : AppCompatActivity() {
             val fromCurrency = binding.spinnerFrom.selectedItem.toString()
             val toCurrency = binding.spinnerTo.selectedItem.toString()
 
+            if (amount == null || amount <= 0.0 || fromCurrency.isBlank() || toCurrency.isBlank()) {
+                Toast.makeText(this, "Please, enter a valid amount", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             if (fromCurrency == toCurrency) {
                 Toast.makeText(this, "Please, select two different currencies", Toast.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
             }
 
-            if (amount == null || fromCurrency.isBlank() || toCurrency.isBlank()) {
-                Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+            // Handle the result from ViewModel
+            when (val result = viewModel.calculateConversion(amount, fromCurrency, toCurrency)) {
+                is ConversionResult.Success -> {
+                    showResultDialog(result.message)
+                    binding.etAmount.text?.clear()
+                    binding.tvConvertedAmount.text = ""
+                    updateBalanceList() // to refresh UI
+                }
 
-            val (resultMessage, success) = viewModel.calculateConversion(
-                amount,
-                fromCurrency,
-                toCurrency
-            )
-
-            if (success) {
-                showResultDialog(resultMessage)
-                binding.etAmount.text?.clear()
-                binding.tvConvertedAmount.text = ""
-                updateBalanceList()
-            } else {
-                Toast.makeText(this, resultMessage, Toast.LENGTH_SHORT).show()
+                is ConversionResult.Error -> {
+                    Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
-        // Live preview of receive amount
+        // live preview of receive amount
         binding.etAmount.addTextChangedListener {
             updateConvertedAmountPreview()
         }
