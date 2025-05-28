@@ -43,6 +43,10 @@ rates, track balances of different currencies, and apply flexible commission rul
 
 ---
 
+# Approximate time spent: ~10-12 hours
+
+---
+
 ## How to Extend
 
 - **Add New Currencies**: Update the rates API and the balance manager.
