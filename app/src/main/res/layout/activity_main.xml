@@ -18,15 +18,14 @@
             android:background="@color/blue"
             android:fontFamily="@font/poppins_medium"
             android:gravity="center"
-            android:textAllCaps="true"
             android:text="@string/currency_exchanger"
+            android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Balance Title -->
         <TextView
             android:id="@+id/tvBalances"
             android:layout_width="wrap_content"
@@ -40,48 +39,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
-        <LinearLayout
-            android:id="@+id/layoutBalances"
-            android:layout_width="0dp"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/balancesCardView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginHorizontal="16dp"
+            app:cardCornerRadius="16dp"
+            android:elevation="0dp"
+            app:strokeColor="@color/blue"
+            app:strokeWidth="1.5dp"
+            android:background="@android:color/transparent"
+            android:backgroundTint="@android:color/transparent"
+            app:cardBackgroundColor="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvBalances">
 
-            <TextView
-                android:id="@+id/tvBalanceEur"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/balancesRv"
+                tools:listitem="@layout/balance_item"
+                tools:itemCount="3"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:fontFamily="@font/poppins"
-                android:textSize="20sp"
-                tools:text="1000.00 EUR" />
+                android:layout_marginHorizontal="16dp" />
 
-            <TextView
-                android:id="@+id/tvBalanceUsd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:fontFamily="@font/poppins"
-                android:textSize="20sp"
-                tools:text="0.00 USD" />
-
-            <TextView
-                android:id="@+id/tvBalanceBgn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins"
-                android:textSize="20sp"
-                tools:text="0.00 BGN" />
-        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/tvExchangeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:fontFamily="@font/poppins_medium"
             android:paddingHorizontal="16dp"
             android:text="@string/currency_exchange"
@@ -89,7 +78,7 @@
             android:textColor="@color/text_blue"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layoutBalances" />
+            app:layout_constraintTop_toBottomOf="@id/balancesCardView" />
 
         <!-- SELL row -->
         <LinearLayout
@@ -126,6 +115,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:autofillHints="100.00"
                 android:fontFamily="@font/poppins"
                 android:hint="@string/_100_00"
                 android:inputType="numberDecimal"

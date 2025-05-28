@@ -103,9 +103,11 @@ class CurrencyViewModel(application: Application) : AndroidViewModel(application
         return Pair(msg, true)
     }
 
-    fun getBalance(currency: String): Double {
-        return balances[currency] ?: 0.0
-    }
+    fun getAllBalances(): Map<String, Double> = balances
+
+//    fun getBalance(currency: String): Double {
+//        return balances[currency] ?: 0.0
+//    }
 
     fun getRate(to: String): Double? {
         return _rates.value?.rates?.get(to)

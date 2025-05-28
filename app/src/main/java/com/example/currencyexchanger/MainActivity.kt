@@ -13,7 +13,10 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.currencyexchanger.data.model.BalanceItem
 import com.example.currencyexchanger.databinding.ActivityMainBinding
+import com.example.currencyexchanger.ui.BalanceAdapter
 import com.example.currencyexchanger.viewmodels.CurrencyViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -21,25 +24,26 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: CurrencyViewModel by viewModels {
         ViewModelProvider.AndroidViewModelFactory.getInstance(application)
     }
+    private lateinit var balanceAdapter: BalanceAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //set the status bar color
+        // Set the status bar color
         WindowCompat.setDecorFitsSystemWindows(window, true)
         window.statusBarColor = ContextCompat.getColor(this, R.color.blue)
 
-        //set light icons in the status bar
+        // Set light icons in the status bar
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
 
         setupExchangeUI()
-        updateBalanceViews()
+        setupBalanceRecycler()
     }
 
     private fun setupExchangeUI() {
-        // observe the list of available currency codes and populate spinners
+        // Observe the list of available currency codes and populate spinners
         viewModel.currencyCodesLiveData.observe(this) { codes ->
             if (codes.isEmpty()) return@observe
 
@@ -54,10 +58,10 @@ class MainActivity : AppCompatActivity() {
             binding.spinnerFrom.adapter = adapter
             binding.spinnerTo.adapter = adapter
 
-            //set default selections
+            // Set default selections
             binding.spinnerFrom.setSelection(codes.indexOf("EUR"))
             binding.spinnerTo.setSelection(codes.indexOf("USD"))
-            // trigger preview once spinners are populated
+            // Trigger preview once spinners are populated
             updateConvertedAmountPreview()
         }
 
@@ -66,13 +70,14 @@ class MainActivity : AppCompatActivity() {
             val fromCurrency = binding.spinnerFrom.selectedItem.toString()
             val toCurrency = binding.spinnerTo.selectedItem.toString()
 
-            if (amount == null || fromCurrency.isBlank() || toCurrency.isBlank()) {
-                Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT).show()
+            if (fromCurrency == toCurrency) {
+                Toast.makeText(this, "Please, select two different currencies", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
 
-            if (fromCurrency == toCurrency) {
-                Toast.makeText(this, "Please, select two different currencies", Toast.LENGTH_SHORT).show()
+            if (amount == null || fromCurrency.isBlank() || toCurrency.isBlank()) {
+                Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -84,9 +89,9 @@ class MainActivity : AppCompatActivity() {
 
             if (success) {
                 showResultDialog(resultMessage)
-                updateBalanceViews()
                 binding.etAmount.text?.clear()
                 binding.tvConvertedAmount.text = ""
+                updateBalanceList()
             } else {
                 Toast.makeText(this, resultMessage, Toast.LENGTH_SHORT).show()
             }
@@ -124,10 +129,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateBalanceViews() {
-        binding.tvBalanceEur.text = getString(R.string.eur_format, viewModel.getBalance("EUR"))
-        binding.tvBalanceUsd.text = getString(R.string.usd_format, viewModel.getBalance("USD"))
-        binding.tvBalanceBgn.text = getString(R.string.bgn_format, viewModel.getBalance("BGN"))
+    private fun setupBalanceRecycler() {
+        balanceAdapter = BalanceAdapter()
+        binding.balancesRv.adapter = balanceAdapter
+        binding.balancesRv.layoutManager = LinearLayoutManager(this)
+        updateBalanceList()
+    }
+
+    private fun updateBalanceList() {
+        val balances = viewModel.getAllBalances().entries.map { BalanceItem(it.key, it.value) }
+        balanceAdapter.submitList(balances)
     }
 
     private fun showResultDialog(message: String) {
